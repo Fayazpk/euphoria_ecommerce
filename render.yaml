@@ -12,13 +12,11 @@ services:
       - key: RAILS_MASTER_KEY
         sync: false
       - key: DATABASE_USERNAME
-        sync: false
+        value: euphoria  # Use the database user from your database config
       - key: DATABASE_PASSWORD
-        sync: false
+        generateValue: true  # Or provide a secure password
 
 databases:
   - name: euphoria-db
     databaseName: euphoria_dress_production
     user: euphoria
-    # Optionally, you can add a password here if your database requires it
-    # password: your_database_password

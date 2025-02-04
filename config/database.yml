@@ -6,32 +6,19 @@ default: &default
 development:
   <<: *default
   database: euphoria_ecommerce_development
-  username:   username: postgres
+  username: postgres
   password: 123
   host: localhost
 
 test:
   <<: *default
   database: euphoria_ecommerce_test
-  username:   username: postgres
+  username: postgres
   password: 123
   host: localhost
 
 production:
-  primary: &primary_production
-    <<: *default
-    database: euphoria_ecommerce_production
-  username: postgres
-  password: 123
-  cache:
-    <<: *primary_production
-    database: euphoria_ecommerce_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: euphoria_ecommerce_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: euphoria_ecommerce_production_cable
-    migrations_paths: db/cable_migrate
+  <<: *default
+  database: euphoria_ecommerce_production
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
