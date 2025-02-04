@@ -18,15 +18,23 @@ test:
   host: localhost
 
 production:
-  <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
-  database: <%= ENV['DATABASE_NAME'] || 'euphoria_ecommerce_production' %>
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    database: <%= ENV['DATABASE_NAME'] || 'euphoria_ecommerce_production' %>
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
+  
+  cable:
+    <<: *default
+    url: <%= ENV['CABLE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
+    database: <%= ENV['CABLE_DATABASE_NAME'] || "#{ENV['DATABASE_NAME']}_cable" || 'euphoria_ecommerce_production_cable' %>
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
 
-cable:
-  <<: *default
-  url: <%= ENV['CABLE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
-  database: <%= ENV['CABLE_DATABASE_NAME'] || "#{ENV['DATABASE_NAME']}_cable" || 'euphoria_ecommerce_production_cable' %>
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %
+  queue:
+    <<: *default
+    url: <%= ENV['QUEUE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
+    database: <%= ENV['QUEUE_DATABASE_NAME'] || "#{ENV['DATABASE_NAME']}_queue" || 'euphoria_ecommerce_production_queue' %>
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
