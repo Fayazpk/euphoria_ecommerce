@@ -23,3 +23,10 @@ production:
   database: <%= ENV['DATABASE_NAME'] || 'euphoria_ecommerce_production' %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
+
+cable:
+  <<: *default
+  url: <%= ENV['CABLE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
+  database: <%= ENV['CABLE_DATABASE_NAME'] || "#{ENV['DATABASE_NAME']}_cable" || 'euphoria_ecommerce_production_cable' %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %
