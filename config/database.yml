@@ -19,6 +19,7 @@ test:
 
 production:
   <<: *default
-  database: euphoria_ecommerce_production
+  url: <%= ENV['DATABASE_URL'] %>
+  database: <%= ENV['DATABASE_NAME'] || 'euphoria_ecommerce_production' %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
