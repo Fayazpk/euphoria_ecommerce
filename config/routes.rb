@@ -11,5 +11,16 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "posts#index"
+  namespace :usermodule do
+  end
+
+  namespace :admin do
+    resources :subcategories
+    resources :categories
+  end
+
+
+
+  root "admin/categories#index"
+  get "/favicon.ico", to: "application#favicon"
 end

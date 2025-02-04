@@ -1,0 +1,22 @@
+<div id="<%= dom_id subcategory %>">
+  <p>
+    <strong>Name:</strong>
+    <%= subcategory.name %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= subcategory.description %>
+  </p>
+
+  <p>
+    <strong>Category:</strong>
+    <%= subcategory.category_id %>
+  </p>
+
+  <p>
+    <strong>Image:</strong>
+    <%= link_to subcategory.image.filename, subcategory.image if subcategory.image.attached? %>
+  </p>
+
+</div>
