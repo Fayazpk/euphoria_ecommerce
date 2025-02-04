@@ -6,8 +6,8 @@ default: &default
 development:
   <<: *default
   database: euphoria_ecommerce_development
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  username: postgres
+  password: 123
   host: localhost
 
 test:
