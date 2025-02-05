@@ -1,0 +1,56 @@
+<div id="<%= dom_id product %>">
+<p>
+  <strong>Name:</strong>
+  <%= @admin_product.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @admin_product.description %>
+</p>
+
+<p>
+  <strong>Base Price:</strong>
+  <%= number_to_currency(@admin_product.base_price) %>
+</p>
+
+<p>
+  <strong>Discount Percentage:</strong>
+  <%= @admin_product.discount_percentage %>%
+</p>
+
+<p>
+  <strong>Total Price:</strong>
+  <%= number_to_currency(@admin_product.total_price) %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @admin_product.category.name %>
+</p>
+
+<p>
+  <strong>Subcategory:</strong>
+  <%= @admin_product.subcategory.name %>
+</p>
+
+<p>
+  <strong>Images:</strong>
+  <% @admin_product.images.each do |image| %>
+    <div><%= link_to image.filename, url_for(image) %></div>
+  <% end %>
+</p>
+
+<p>
+  <strong>Stock for Sizes:</strong>
+  <% @admin_product.product_variants.each do |variant| %>
+    <div>
+      Size <%= variant.size.size %>: <%= variant.stock %>
+    </div>
+  <% end %>
+</p>
+
+<%= link_to "Edit this product", edit_admin_product_path(@admin_product) %> |
+<%= link_to "Back to products", admin_products_path %> |
+<%= button_to "Destroy this product", admin_product_path(@admin_product), method: :delete %>
+</div>

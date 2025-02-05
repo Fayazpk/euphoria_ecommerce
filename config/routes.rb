@@ -12,15 +12,25 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   namespace :usermodule do
+    get "home"
+    resources :categories do
+      resources :subcategories do
+        resources :products do
+          resources :productviews, only: [:index]
+        end
+      end
+    end
   end
+
 
   namespace :admin do
     resources :subcategories
     resources :categories
+    resources :products
   end
 
 
 
-  root "admin/categories#index"
+  root 'usermodule/home#index'
   get "/favicon.ico", to: "application#favicon"
 end
