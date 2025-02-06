@@ -1,0 +1,2 @@
+module Usermodule::WalletsHelper
+end

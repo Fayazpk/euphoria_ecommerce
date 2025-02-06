@@ -12,7 +12,18 @@
     <div class="container">
       <h1>Welcome to Euphoria Dress!</h1>
       <p>Your one-stop shop for premium dresses and accessories.</p>
-      <%= link_to 'Shop Now', usermodule_categories_path, class: 'btn btn-primary btn-lg' %>
+      <div class="btn-group">
+        <%= link_to 'Shop Now', usermodule_categories_path, class: 'btn btn-primary btn-lg' %>
+        <% if user_signed_in? %>
+          <%= link_to 'Edit profile', '#', class: 'btn btn-outline-light btn-lg ml-2' %>
+          <%= button_to new_session_path, method: :delete, class: "block px-4 py-3 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900" do %>
+                              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                          <% end %>
+        <% else %>
+          <%= link_to 'Sign Up', new_registration_path, class: 'btn btn-outline-light btn-lg ml-2' %>
+          <%= link_to 'Login', new_session_path, class: 'btn btn-outline-light btn-lg ml-2' %>
+        <% end %>
+      </div>
     </div>
   </section>
 

@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
+  resources :registrations
+  resources :sessions, only: [:new, :create, :destroy]
+  resources :password_reset
+  resources :password
   resources :posts
-
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :usermodule do
@@ -12,9 +15,15 @@ Rails.application.routes.draw do
         end
       end
     end
-  
+
     resources :carts, only: [:index]
     resources :cart_items, only: [:create, :update, :destroy]
+    resource :wallet, only: [:show] do
+      member do
+        post :add_money
+        post :deduct_money
+      end
+    end
   end
 
   namespace :admin do
