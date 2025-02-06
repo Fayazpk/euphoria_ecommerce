@@ -1,0 +1,57 @@
+<%= form_with(model: @admin_coupon, url: admin_coupons_path, local: true) do |form| %>
+  <% if admin_coupon.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(admin_coupon.errors.count, "error") %> prohibited this admin_coupon from being saved:</h2>
+
+      <ul>
+        <% admin_coupon.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :code, style: "display: block" %>
+    <%= form.text_field :code %>
+  </div>
+
+  <div>
+    <%= form.label :discount, style: "display: block" %>
+    <%= form.text_field :discount %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.textarea :description %>
+  </div>
+
+  <div>
+    <%= form.label :valid_from, style: "display: block" %>
+    <%= form.date_field :valid_from %>
+  </div>
+
+  <div>
+    <%= form.label :valid_until, style: "display: block" %>
+    <%= form.date_field :valid_until %>
+  </div>
+
+  <div>
+    <%= form.label :max_usage, style: "display: block" %>
+    <%= form.number_field :max_usage %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.checkbox :status %>
+  </div>
+
+  <div>
+    <%= form.label :minimum_purchase_amount, style: "display: block" %>
+    <%= form.text_field :minimum_purchase_amount %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

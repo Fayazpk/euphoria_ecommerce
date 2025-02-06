@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code: MyString
+  discount: 9.99
+  description: MyText
+  valid_from: 2025-02-06
+  valid_until: 2025-02-06
+  max_usage: 1
+  status: false
+  minimum_purchase_amount: 9.99
+
+two:
+  code: MyString
+  discount: 9.99
+  description: MyText
+  valid_from: 2025-02-06
+  valid_until: 2025-02-06
+  max_usage: 1
+  status: false
+  minimum_purchase_amount: 9.99

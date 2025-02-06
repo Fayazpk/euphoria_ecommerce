@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Euphoria Dress</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Your Cart</h1>
+        <% if @cart_items.any? %>
+            <div class="grid grid-cols-1 gap-6 mb-8">
+                <% @cart_items.each do |cart_item| %>
+                    <div class="cart-item flex items-center justify-between bg-white p-4 rounded-lg shadow">
+                        <div class="flex items-center flex-grow">
+                            <% if cart_item.product.images.attached? %>
+                                <%= image_tag cart_item.product.images.first, class: "w-24 h-24 rounded-lg object-cover" %>
+                            <% end %>
+                            <div class="ml-4 flex-grow">
+                                <div class="flex justify-between items-start">
+                                    <h2 class="text-xl font-bold"><%= cart_item.product.name %></h2>
+                                    <%= button_to usermodule_cart_item_path(cart_item),
+                                        method: :delete,
+                                        class: "text-red-500 hover:text-red-700",
+                                        form: { data: { turbo_confirm: 'Are you sure?' } } do %>
+                                        <i class="fas fa-trash"></i>
+                                    <% end %>
+                                </div>
+                                <p class="text-gray-600">Price: $<%= cart_item.product.total_price %></p>
+                                
+                                <!-- Size Selection -->
+                                <div class="mt-2">
+                                    <button type="button" 
+                                            class="size-toggle-btn text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                            data-current-size="<%= cart_item.product_variant.size.size %>"
+                                            data-cart-item-id="<%= cart_item.id %>">
+                                        Change Size: <span class="current-size"><%= cart_item.product_variant.size.size %></span>
+                                        <i class="fas fa-chevron-down ml-1"></i>
+                                    </button>
+                                    
+                                    <!-- Size Selection Dropdown (hidden by default) -->
+                                    <div class="size-dropdown hidden mt-2 absolute bg-white shadow-lg rounded-lg p-2 z-10">
+                                        <% cart_item.product.product_variants.includes(:size).each do |variant| %>
+                                            <%= form_with model: [:usermodule, cart_item], local: true, method: :patch do |f| %>
+                                                <%= f.hidden_field :product_variant_id, value: variant.id %>
+                                                <button type="submit" 
+                                                        class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded <%= variant.id == cart_item.product_variant_id ? 'bg-blue-50' : '' %>">
+                                                    <%= variant.size.size %>
+                                                </button>
+                                            <% end %>
+                                        <% end %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-6">
+                            <%= form_with model: [:usermodule, cart_item], local: true, method: :patch do |f| %>
+                                <div class="quantity-selector flex items-center">
+                                    <%= button_tag '-', type: "button", class: "quantity-btn px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded", data: { action: "decrease" } %>
+                                    <%= f.number_field :quantity, value: cart_item.quantity, min: 1, class: "quantity-input mx-2 w-12 text-center border border-gray-300 rounded" %>
+                                    <%= button_tag '+', type: "button", class: "quantity-btn px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded", data: { action: "increase" } %>
+                                </div>
+                                <%= f.hidden_field :product_variant_id, value: cart_item.product_variant.id %>
+                                <%= f.submit "Update", class: "ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" %>
+                            <% end %>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+            
+            <!-- Cart Summary and Checkout Button -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xl font-bold">Total:</span>
+                    <span class="text-2xl font-bold">$<%= @cart_items.sum { |item| item.product.total_price * item.quantity } %></span>
+                </div>
+                <%= button_to 'Proceed to Checkout', '#', class: "w-full bg-green-500 text-white py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition-colors" %>
+            </div>
+        <% else %>
+            <p>Your cart is empty.</p>
+        <% end %>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle quantity change
+            document.querySelectorAll('.quantity-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    const quantityInput = this.closest('.quantity-selector').querySelector('.quantity-input');
+                    let currentValue = parseInt(quantityInput.value);
+
+                    if (action === 'increase') {
+                        quantityInput.value = currentValue + 1;
+                    } else if (action === 'decrease' && currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                    }
+                });
+            });
+
+            // Handle size dropdown toggles
+            document.querySelectorAll('.size-toggle-btn').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    // Close all other dropdowns first
+                    document.querySelectorAll('.size-dropdown').forEach(dropdown => {
+                        if (dropdown !== this.nextElementSibling) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
+
+                    // Toggle current dropdown
+                    const dropdown = this.nextElementSibling;
+                    dropdown.classList.toggle('hidden');
+                });
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.size-toggle-btn') && !e.target.closest('.size-dropdown')) {
+                    document.querySelectorAll('.size-dropdown').forEach(dropdown => {
+                        dropdown.classList.add('hidden');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -52,7 +52,7 @@
                         <h3 class="text-lg font-semibold mb-4">Available Sizes</h3>
                         <div class="flex flex-wrap gap-3">
                             <% @variants.each do |variant| %>
-                                <button class="size-btn" data-variant-id="<%= variant.id %>">
+                                <button class="size-btn <%= variant.stock > 0 ? 'border-green-500' : 'border-red-500' %>" data-variant-id="<%= variant.id %>">
                                     <%= variant.size.size %>
                                 </button>
                             <% end %>
@@ -60,20 +60,14 @@
                     </div>
                 <% end %>
 
-                <div class="quantity-selector mb-8">
-                    <h3 class="text-lg font-semibold mb-4">Quantity</h3>
-                    <div class="flex items-center space-x-4">
-                        <button class="quantity-btn" data-action="decrease">-</button>
-                        <input type="number" value="1" min="1" class="quantity-input">
-                        <button class="quantity-btn" data-action="increase">+</button>
-                    </div>
-                </div>
-
                 <div class="actions-container flex space-x-4">
-                    <button class="add-to-cart-btn">
-                        <i class="fas fa-shopping-cart mr-2"></i>
-                        Add to Cart
-                    </button>
+                   <%= form_with url: usermodule_cart_items_path, local: true, id: "cart-form" do |f| %>
+                         <%= f.hidden_field :product_id, value: @product.id, name: 'cart_item[product_id]' %>
+                            <button type="button" class="add-to-cart-btn bg-primary text-white px-6 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                             <i class="fas fa-shopping-cart mr-2"></i>
+                             Add to Cart
+                                </button>
+                            <% end %>
                     <button class="wishlist-btn">
                         <i class="far fa-heart"></i>
                     </button>
@@ -126,5 +120,6 @@
             </div>
         </section>
     </div>
-</body>
-</html>
+
+    <%= javascript_include_tag 'application', type: 'module', defer: true %>
+    <%= javascript_include_tag 'product_view', type: 'module', defer: true %>
