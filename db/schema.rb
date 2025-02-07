@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_06_202733) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_202733) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "addresses", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "building_name"
+    t.string "street_address"
+    t.string "phone"
+    t.bigint "user_id", null: false
+    t.string "country_name"
+    t.string "state_name"
+    t.string "city_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
   create_table "cart_items", force: :cascade do |t|
     t.bigint "product_id", null: false
     t.bigint "product_variant_id", null: false
@@ -68,6 +83,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_202733) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "checkouts", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "address_id", null: false
+    t.bigint "user_id", null: false
+    t.string "payment_method"
+    t.decimal "total_price"
+    t.string "status"
+    t.string "payment_status"
+    t.string "razorpay_order_id"
+    t.string "razorpay_payment_id"
+    t.string "razorpay_signature"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "discount", precision: 10, scale: 2, default: "0.0"
+    t.index ["address_id"], name: "index_checkouts_on_address_id"
+    t.index ["cart_id"], name: "index_checkouts_on_cart_id"
+    t.index ["user_id"], name: "index_checkouts_on_user_id"
+  end
+
   create_table "coupons", force: :cascade do |t|
     t.string "code"
     t.decimal "discount"
@@ -84,6 +118,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_202733) do
   create_table "currents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "order_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "product_variant_id", null: false
+    t.integer "quantity"
+    t.decimal "unit_price"
+    t.decimal "total"
+    t.string "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+    t.index ["product_variant_id"], name: "index_order_items_on_product_variant_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "total_price"
+    t.string "payment_method"
+    t.string "payment_status"
+    t.string "status"
+    t.string "transaction_id"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -148,6 +210,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_202733) do
     t.string "transaction_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "checkout_id"
     t.index ["wallet_id"], name: "index_wallet_transactions_on_wallet_id"
   end
 
@@ -161,10 +224,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_202733) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "users"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "product_variants"
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"
+  add_foreign_key "checkouts", "addresses"
+  add_foreign_key "checkouts", "carts"
+  add_foreign_key "checkouts", "users"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "product_variants"
+  add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "users"
   add_foreign_key "product_variants", "products"
   add_foreign_key "product_variants", "sizes"
   add_foreign_key "products", "categories"

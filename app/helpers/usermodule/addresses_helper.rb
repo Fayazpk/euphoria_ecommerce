@@ -1,0 +1,2 @@
+module Usermodule::AddressesHelper
+end

@@ -1,0 +1,11 @@
+<% content_for :title, "New address" %>
+
+<h1>New address</h1>
+
+<%= render "form", usermodule_address: @usermodule_address %>
+
+<br>
+
+<div>
+  <%= link_to "Back to addresses", usermodule_addresses_path %>
+</div>

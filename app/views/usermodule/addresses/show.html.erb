@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @usermodule_address %>
+
+<div>
+  <%= link_to "Edit this address", edit_usermodule_address_path(@usermodule_address) %> |
+<%= link_to "Back to addresses", usermodule_addresses_path, class: 'text-blue-500 hover:underline' %>
+
+<%= button_to "Destroy this address", usermodule_address_path(@usermodule_address), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-500 hover:underline' %>
+</div>

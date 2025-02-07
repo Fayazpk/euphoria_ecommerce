@@ -1,0 +1,13 @@
+<% content_for :title, "Editing address" %>
+
+<h1>Editing address</h1>
+
+<%= render "form", usermodule_address: @usermodule_address %>
+
+<br>
+
+<div>
+  <%= link_to "Show this address", usermodule_addresses_path(@usermodule_address) %> |
+  <%= link_to "Back to addresses", usermodule_addresses_path, class: 'text-blue-500 hover:underline' %>
+
+</div>

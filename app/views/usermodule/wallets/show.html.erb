@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Wallet - Euphoria Dress</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Wallet</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-center">Your Wallet</h1>
+<body class="bg-gray-50">
+  <div class="container mx-auto px-4 py-8 max-w-6xl">
+    <h1 class="text-4xl font-bold mb-12 text-center text-gray-800">Your Wallet</h1>
 
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <p class="text-xl font-semibold mb-4">Current Balance: <%= number_to_currency(@wallet.balance) %></p>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Wallet Transactions</h2>
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="w-1/6 py-3 px-4 text-left text-sm font-semibold text-gray-600">Transaction ID</th>
-                        <th class="w-1/6 py-3 px-4 text-left text-sm font-semibold text-gray-600">Type</th>
-                        <th class="w-1/6 py-3 px-4 text-left text-sm font-semibold text-gray-600">Amount</th>
-                        <th class="w-1/4 py-3 px-4 text-left text-sm font-semibold text-gray-600">Description</th>
-                        <th class="w-1/6 py-3 px-4 text-left text-sm font-semibold text-gray-600">Balance After</th>
-                        <th class="w-1/6 py-3 px-4 text-left text-sm font-semibold text-gray-600">Date</th>
-                    </tr>
-                </thead>
-                <tbody class="text-gray-600">
-                    <% @wallet_transactions.each do |transaction| %>
-                        <tr class="border-b">
-                            <td class="py-3 px-4"><%= transaction.transaction_id %></td>
-                            <td class="py-3 px-4 capitalize"><%= transaction.transaction_type %></td>
-                            <td class="py-3 px-4"><%= number_to_currency(transaction.amount) %></td>
-                            <td class="py-3 px-4"><%= transaction.description %></td>
-                            <td class="py-3 px-4"><%= number_to_currency(transaction.balance_after) %></td>
-                            <td class="py-3 px-4"><%= transaction.created_at.strftime("%d-%m-%Y %H:%M") %></td>
-                        </tr>
-                    <% end %>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Add Money</h2>
-            <%= form_with url: add_money_usermodule_wallet_path, local: true do |form| %>
-                <div class="mb-4">
-                    <%= form.label :amount, "Amount to Add", class: "block text-sm font-medium text-gray-700" %>
-                    <%= form.number_field :amount, step: 0.01, min: 1.0, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-                </div>
-                <%= form.submit "Add Money", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
-            <% end %>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Deduct Money</h2>
-            <%= form_with url: deduct_money_usermodule_wallet_path, local: true do |form| %>
-                <div class="mb-4">
-                    <%= form.label :amount, "Amount to Deduct", class: "block text-sm font-medium text-gray-700" %>
-                    <%= form.number_field :amount, step: 0.01, min: 1.0, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-                </div>
-                <%= form.submit "Deduct Money", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
-            <% end %>
-        </div>
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+      <p>Current Balance: <%= number_to_currency(@wallet.balance) %></p>
     </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-semibold mb-4">Wallet Transactions</h2>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Balance After</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @wallet_transactions.each do |transaction| %>
+            <tr>
+              <td><%= transaction.transaction_id %></td>
+              <td><%= transaction.transaction_type %></td>
+              <td><%= number_to_currency(transaction.amount) %></td>
+              <td><%= transaction.description %></td>
+              <td><%= number_to_currency(transaction.balance_after) %></td>
+              <td><%= transaction.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-semibold mb-4">Add Money</h2>
+      <%= form_with url: add_money_usermodule_wallet_path, local: true do |form| %>
+        <div class="mb-4">
+          <%= form.label :amount, "Amount to Add", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :amount, step: 0.01, min: 1.0, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+        <%= form.submit "Add Money", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+      <% end %>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-2xl font-semibold mb-4">Deduct Money</h2>
+      <%= form_with url: deduct_money_usermodule_wallet_path, local: true do |form| %>
+        <div class="mb-4">
+          <%= form.label :amount, "Amount to Deduct", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :amount, step: 0.01, min: 1.0, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+        <%= form.submit "Deduct Money", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+      <% end %>
+    </div>
+  </div>
 </body>
 </html>

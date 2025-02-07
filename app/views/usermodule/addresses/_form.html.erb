@@ -1,0 +1,57 @@
+<%= form_with(model: [:usermodule, @usermodule_address], local: true) do |form| %>  <% if @usermodule_address.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@usermodule_address.errors.count, "error") %> prohibited this address from being saved:</h2>
+      <ul>
+        <% @usermodule_address.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :first_name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :last_name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :building_name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :building_name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :street_address, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :street_address, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :phone, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.telephone_field :phone, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :country_name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :country_name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :state_name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :state_name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :city_name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :city_name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+  </div>
+
+  <div class="text-center">
+    <%= form.submit "Save Address", class: "w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+<% end %>
+
+

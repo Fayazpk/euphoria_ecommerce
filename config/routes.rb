@@ -15,13 +15,18 @@ Rails.application.routes.draw do
         end
       end
     end
-
+    resources :addresses
     resources :carts, only: [:index]
     resources :cart_items, only: [:create, :update, :destroy]
     resource :wallet, only: [:show] do
       member do
         post :add_money
         post :deduct_money
+      end
+    end
+    resources :checkouts, only: [:new, :create, :show] do
+      collection do
+        post :apply_coupon
       end
     end
   end

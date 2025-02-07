@@ -105,11 +105,10 @@
           </div>
         </div>
 
-        <%= button_to '#', 
-            class: "w-full mt-6 bg-indigo-600 py-3 px-4 rounded-md text-white font-medium hover:bg-indigo-700" do %>
-          Proceed to Checkout
-        <% end %>
-      </div>
+        <%= button_to 'Proceed to Checkout', 
+    new_usermodule_checkout_path, 
+    method: :get,  # Add method: :get 
+    class: "w-full mt-6 bg-indigo-600 py-3 px-4 rounded-md text-white font-medium hover:bg-indigo-700" %>
     </div>
   </div>
 </div>
