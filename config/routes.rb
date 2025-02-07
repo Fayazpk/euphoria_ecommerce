@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :usermodule do
+    get "orders/index"
+    get "orders/show"
+    get "orders/update_address"
+    get "orders/return_item"
     get "home"
     resources :categories do
       resources :subcategories do
@@ -27,6 +31,12 @@ Rails.application.routes.draw do
     resources :checkouts, only: [:new, :create, :show] do
       collection do
         post :apply_coupon
+      end
+    end
+    resources :orders, only: [:index, :show] do
+      member do
+        patch :update_address
+        post :return_item
       end
     end
   end
