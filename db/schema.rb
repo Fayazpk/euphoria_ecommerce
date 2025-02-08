@@ -137,11 +137,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_08_072729) do
     t.index ["product_variant_id"], name: "index_order_items_on_product_variant_id"
   end
 
-  create_table "order_status_histories", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "orders", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.decimal "total_price", precision: 10, scale: 2
