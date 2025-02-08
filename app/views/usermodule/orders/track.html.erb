@@ -1,0 +1,53 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Track Order #<%= @order.id %></h1>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    <div class="md:col-span-2">
+      <div class="border rounded-lg p-4">
+        <h2 class="text-lg font-semibold mb-4">Order Timeline</h2>
+        <div class="space-y-8">
+          <% @status_histories.each do |history| %>
+            <div class="relative pl-8">
+              <div class="absolute left-0 top-2 w-4 h-4 rounded-full bg-blue-500"></div>
+              <% if !history.equal?(@status_histories.last) %>
+                <div class="absolute left-2 top-6 bottom-0 w-0.5 bg-gray-300"></div>
+              <% end %>
+              <div>
+                <p class="font-medium">
+                  Status changed to <%= history.to_status.titleize %>
+                </p>
+                <p class="text-sm text-gray-600">
+                  <%= history.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                </p>
+                <% if history.notes.present? %>
+                  <p class="text-sm text-gray-600 mt-1"><%= history.notes %></p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="border rounded-lg p-4 sticky top-4">
+        <h2 class="text-lg font-semibold mb-4">Current Status</h2>
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+              <i class="fas fa-box"></i>
+            </div>
+            <div class="ml-3">
+              <p class="font-medium"><%= @order.status.titleize %></p>
+              <% if @order.delivered_at.present? %>
+                <p class="text-sm text-gray-600">
+                  Delivered on <%= @order.delivered_at.strftime("%B %d, %Y") %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

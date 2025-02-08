@@ -1,26 +1,18 @@
-<%= render 'layouts/flash_messages' %>
-<h1>Order Details</h1>
-<p>Status: <%= @order.status %></p>
-<p>Address: <%= @order.address %></p>
-<% if @order.can_update_address? %>
-  <%= form_with(model: @order, url: update_address_usermodule_order_path(@order), method: :patch) do |form| %>
-    <%= form.label :address %>
-    <%= form.text_area :address %>
-    <%= form.submit 'Update Address' %>
-  <% end %>
-<% end %>
-
-<h2>Order Items</h2>
-<ul>
-  <% @order_items.each do |item| %>
-    <li>
-      <%= item.product.name %> - <%= item.quantity %>
-      <% if @order.can_return_items? %>
-        <%= form_with url: return_item_usermodule_order_path(@order), method: :post do |form| %>
-          <%= hidden_field_tag :order_item_id, item.id %>
-          <%= form.submit 'Return Item' %>
-        <% end %>
+<% if item.returnable? %>
+                <%= button_to "Return Item",
+                    return_item_usermodule_order_path(@order, item_id: item.id),
+                    method: :post,
+                    data: { confirm: "Are you sure you want to return this item?" },
+                    class: "btn btn-secondary text-sm" %>
+              <% elsif item.return_request.present? %>
+                <span class="text-sm text-gray-600">
+                  Return <%= item.return_request.status %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
       <% end %>
-    </li>
-  <% end %>
-</ul>
+    </div>
+  </div>
+</div>

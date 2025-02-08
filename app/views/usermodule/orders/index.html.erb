@@ -1,22 +1,38 @@
-<%= render 'layouts/flash_messages' %>
-<h1>My Orders</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Order ID</th>
-      <th>Status</th>
-      <th>Created At</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">My Orders</h1>
+
+  <div class="grid gap-6">
     <% @orders.each do |order| %>
-      <tr>
-        <td><%= order.id %></td>
-        <td><%= order.status %></td>
-        <td><%= order.created_at %></td>
-        <td><%= link_to 'View', usermodule_order_path(order) %></td>
-      </tr>
+      <div class="border rounded-lg p-4 shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold">Order #<%= order.id %></h2>
+          <span class="px-3 py-1 rounded-full text-sm
+            <%= order_status_color(order.status) %>">
+            <%= order.status.titleize %>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <p class="text-gray-600">Order Date</p>
+            <p><%= order.created_at.strftime("%B %d, %Y") %></p>
+          </div>
+          <div>
+            <p class="text-gray-600">Total Amount</p>
+            <p><%= number_to_currency(order.total_price) %></p>
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+          <%= link_to "View Details", usermodule_order_path(order),
+              class: "btn btn-primary" %>
+          <%= link_to "Track Order", track_usermodule_order_path(order),
+              class: "btn btn-secondary" %>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <%= paginate @orders %>
+</div>

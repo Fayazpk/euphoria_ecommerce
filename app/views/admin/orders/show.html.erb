@@ -1,0 +1,49 @@
+<% provide(:title, "Order ##{@order.id}") %>
+<div class="container mt-5">
+  <h1 class="mb-4">Order Details</h1>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      Order Information
+    </div>
+    <div class="card-body">
+      <p><strong>Order ID:</strong> <%= @order.id %></p>
+      <p><strong>User:</strong> <%= @order.user.email %></p>
+      <p><strong>Total Price:</strong> <%= number_to_currency(@order.total_price) %></p>
+      <p><strong>Payment Status:</strong> <%= @order.payment_status.titleize %></p>
+      <p><strong>Status:</strong> <%= @order.status.titleize %></p>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      Order Items
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Variant</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @order_items.each do |item| %>
+            <tr>
+              <td><%= item.product.name %></td>
+              <td><%= item.product_variant.size.name %></td>
+              <td><%= item.quantity %></td>
+              <td><%= number_to_currency(item.unit_price) %></td>
+              <td><%= number_to_currency(item.total) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%= link_to 'Back to Orders', admin_orders_path, class: 'btn btn-secondary' %>
+</div>

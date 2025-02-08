@@ -28,16 +28,18 @@ Rails.application.routes.draw do
         post :deduct_money
       end
     end
-    resources :checkouts, only: [:new, :create, :show] do
+    resources :checkouts do
       collection do
         post :apply_coupon
       end
     end
-    resources :orders, only: [:index, :show] do
+    resources :orders do
       member do
         patch :update_address
         post :return_item
+        get :track
       end
+      resources :return_requests, only: [:create, :show]
     end
   end
 
@@ -46,6 +48,16 @@ Rails.application.routes.draw do
     resources :subcategories
     resources :categories
     resources :products
+    resources :orders do
+      member do
+        patch :update_status
+      end
+      resources :return_requests do
+        member do
+          patch :process_return
+        end
+      end
+    end
   end
 
   root 'usermodule/home#index'

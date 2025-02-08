@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_08_072729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -97,6 +97,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "discount", precision: 10, scale: 2, default: "0.0"
+    t.string "coupon_code"
+    t.decimal "tax", precision: 10, scale: 2, default: "0.0"
     t.index ["address_id"], name: "index_checkouts_on_address_id"
     t.index ["cart_id"], name: "index_checkouts_on_cart_id"
     t.index ["user_id"], name: "index_checkouts_on_user_id"
@@ -124,9 +126,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false
     t.bigint "product_variant_id", null: false
-    t.integer "quantity"
-    t.decimal "unit_price"
-    t.decimal "total"
+    t.integer "quantity", null: false
+    t.decimal "unit_price", precision: 10, scale: 2, null: false
+    t.decimal "total", precision: 10, scale: 2, null: false
     t.string "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -135,16 +137,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
     t.index ["product_variant_id"], name: "index_order_items_on_product_variant_id"
   end
 
-  create_table "orders", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.decimal "total_price"
-    t.string "payment_method"
-    t.string "payment_status"
-    t.string "status"
-    t.string "transaction_id"
-    t.datetime "completed_at"
+  create_table "order_status_histories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "total_price", precision: 10, scale: 2
+    t.string "payment_method"
+    t.string "payment_status"
+    t.string "status", default: "processing"
+    t.string "transaction_id"
+    t.datetime "completed_at"
+    t.datetime "delivered_at"
+    t.bigint "address_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["payment_status"], name: "index_orders_on_payment_status"
+    t.index ["status"], name: "index_orders_on_status"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -177,6 +189,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["subcategory_id"], name: "index_products_on_subcategory_id"
+  end
+
+  create_table "return_requests", force: :cascade do |t|
+    t.bigint "order_item_id", null: false
+    t.bigint "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.text "reason"
+    t.text "admin_notes"
+    t.datetime "processed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_item_id"], name: "index_return_requests_on_order_item_id"
+    t.index ["status"], name: "index_return_requests_on_status"
+    t.index ["user_id"], name: "index_return_requests_on_user_id"
   end
 
   create_table "sizes", force: :cascade do |t|
@@ -235,11 +261,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_202822) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "product_variants"
   add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "users"
   add_foreign_key "product_variants", "products"
   add_foreign_key "product_variants", "sizes"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "subcategories"
+  add_foreign_key "return_requests", "order_items"
+  add_foreign_key "return_requests", "users"
   add_foreign_key "subcategories", "categories"
   add_foreign_key "wallet_transactions", "wallets"
   add_foreign_key "wallets", "users"

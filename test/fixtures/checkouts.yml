@@ -1,5 +1,3 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   cart: one
   address: one
@@ -11,6 +9,7 @@ one:
   razorpay_order_id: MyString
   razorpay_payment_id: MyString
   razorpay_signature: MyString
+  tax: 1.00
 
 two:
   cart: two
@@ -23,3 +22,4 @@ two:
   razorpay_order_id: MyString
   razorpay_payment_id: MyString
   razorpay_signature: MyString
+  tax: 1.00

@@ -47,24 +47,51 @@
 
             <!-- Checkout Form -->
             <div class="bg-white rounded-xl shadow-lg p-8">
-                <%= form_with(model: [:usermodule, @checkout], local: true, html: { id: 'checkout-form' }) do |f| %>
+                <%= form_with(url: usermodule_checkouts_path, model: @checkout, local: true, html: { id: 'checkout-form' }) do |f| %>
                     <!-- Shipping Address -->
                     <section class="mb-8">
                         <h2 class="text-2xl font-semibold mb-6">Shipping Address</h2>
                         <div class="space-y-4">
-                            <% @addresses.each do |address| %>
-                                <label class="block border rounded-lg p-4 hover:border-blue-500 transition">
-                                    <%= f.radio_button :address_id, address.id, class: "mr-3" %>
-                                    <span>
-                                        <%= address.first_name %> <%= address.last_name %><br>
-                                        <%= address.building_name %>, <%= address.street_address %><br>
-                                        <%= address.city_name %>, <%= address.state_name %><br>
-                                        <%= address.phone %>
-                                    </span>
-                                </label>
+                            <% if @addresses&.any? %>
+                                <% @addresses.each do |address| %>
+                                    <label class="block border rounded-lg p-4 hover:border-blue-500 transition cursor-pointer">
+                                        <div class="flex items-start">
+                                            <%= f.radio_button :address_id, address.id, class: "mr-3 mt-1", required: true %>
+                                            <div class="flex-grow">
+                                                <span class="font-medium">
+                                                    <%= address.first_name %> <%= address.last_name %>
+                                                </span><br>
+                                                <span class="text-gray-600">
+                                                    <%= address.building_name %>, <%= address.street_address %><br>
+                                                    <%= address.city_name %>, <%= address.state_name %><br>
+                                                    Phone: <%= address.phone %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                <% end %>
+                                <div class="mt-6 flex items-center justify-between">
+                                    <%= link_to new_usermodule_address_path, 
+                                        class: "inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300" do %>
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                        Add New Address
+                                    <% end %>
+                                </div>
+                            <% else %>
+                                <div class="text-center py-6 bg-gray-50 rounded-lg">
+                                    <p class="text-gray-600 mb-4">No shipping addresses found</p>
+                                    <%= link_to new_usermodule_address_path, 
+                                        class: "inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300" do %>
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                        Add Your First Address
+                                    <% end %>
+                                </div>
                             <% end %>
                         </div>
-                        <%= link_to "Add New Address", new_usermodule_address_path, class: "inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 mt-4" %>
                     </section>
 
                     <!-- Payment Methods -->
@@ -100,23 +127,40 @@
                     </section>
 
                     <!-- Coupon Section -->
-                    <section class="mb-8">
-                        <h2 class="text-2xl font-semibold mb-6">Coupon Code</h2>
-                        <div class="flex space-x-2">
-                            <%= f.text_field :coupon_code, class: "form-input w-full", placeholder: "Enter coupon code" %>
-                            <button type="button" id="apply-coupon-btn" onclick="apply_coupon()" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">Apply</button>
-                        </div>
-                        <div class="mt-4">
-                            <h3 class="text-lg font-semibold">Available Coupons:</h3>
-                            <ul class="list-disc list-inside mt-2">
-                                <% @coupons.each do |coupon| %>
-                                    <li>
-                                        <strong><%= coupon.code %></strong>: <%= coupon.discount %>% off, valid until <%= coupon.valid_until.strftime("%B %d, %Y") %>
-                                    </li>
-                                <% end %>
-                            </ul>
-                        </div>
-                    </section>
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-6">Coupon Code</h2>
+    <div class="flex space-x-2">
+        <%= f.text_field :coupon_code, class: "form-input w-full", placeholder: "Enter coupon code" %>
+        <button type="button" id="apply-coupon-btn" onclick="apply_coupon()" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">Apply</button>
+    </div>
+    
+    <div class="mt-4">
+        <h3 class="text-lg font-semibold">Available Coupons:</h3>
+        <ul class="list-disc list-inside mt-2">
+            <% if @coupons&.any? %>
+                <% @coupons.each do |coupon| %>
+                    <li class="mb-2">
+                        <strong class="text-gray-800"><%= coupon.code %></strong>: 
+                        <span class="text-gray-700"><%= coupon.discount %>% off</span>
+                        <% if coupon.minimum_purchase_amount > 0 %>
+                            <span class="text-gray-600">(Min. purchase: <%= number_to_currency(coupon.minimum_purchase_amount) %>)</span>
+                        <% end %>
+                        <span class="text-gray-500 text-sm">
+                            • Valid until <%= coupon.valid_until.strftime("%B %d, %Y") %>
+                        </span>
+                    </li>
+                <% end %>
+            <% else %>
+                <li class="text-gray-600">No active coupons available at this time.</li>
+            <% end %>
+        </ul>
+    </div>
+
+    <!-- Add a div for coupon feedback -->
+    <div id="coupon-feedback" class="mt-2 hidden">
+        <p class="text-sm"></p>
+    </div>
+</section>
 
                     <!-- Price Breakdown -->
                     <section class="mb-8">
@@ -147,74 +191,87 @@
     </div>
 
     <%= javascript_tag do %>
-      // Form Validation and Submission
-      const checkoutForm = document.getElementById('checkout-form');
-      const placeOrderButton = document.getElementById('place-order-button');
-
-      const validateForm = () => {
-        const addressSelected = document.querySelector('input[name="checkout[address_id]"]:checked');
-        const paymentSelected = document.querySelector('input[name="checkout[payment_method]"]:checked');
-
-        if (!addressSelected) {
-          alert('Please select a shipping address');
-          return false;
-        }
-
-        if (!paymentSelected) {
-          alert('Please select a payment method');
-          return false;
-        }
-
-        const walletRadio = document.querySelector('input[name="checkout[payment_method]"][value="wallet"]');
-        const insufficientBalance = walletRadio && walletRadio.dataset.insufficientBalance === 'true';
-
-        if (paymentSelected.value === 'wallet' && insufficientBalance) {
-          alert('Insufficient wallet balance. Please select another payment method.');
-          return false;
-        }
-
-        return true;
-      };
-
-      checkoutForm.addEventListener('submit', function(e) {
-        if (!validateForm()) {
-          e.preventDefault();
-        }
-      });
-
-      // Coupon Handling
-      function applyCoupon() {
-        const couponCode = document.querySelector('input[name="checkout[coupon_code]"]').value;
-
-        fetch('/usermodule/checkouts/apply_coupon', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
-          },
-          body: JSON.stringify({ coupon_code: couponCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-          const discountRow = document.getElementById('discount-row');
-          const finalTotal = document.getElementById('final-total');
-
-          if (data.success && data.discount > 0) {
-            discountRow.classList.remove('hidden');
-            discountRow.querySelector('span:last-child').textContent = `-${data.discount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}`;
-            finalTotal.textContent = data.total.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
-            alert('Coupon applied successfully');
-          } else {
-            discountRow.classList.add('hidden');
-            finalTotal.textContent = data.total.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
-            alert(data.error || 'Invalid coupon');
+        document.addEventListener('DOMContentLoaded', function() {
+          // Form Validation and Submission
+          const checkoutForm = document.getElementById('checkout-form');
+          const placeOrderButton = document.getElementById('place-order-button');
+      
+          const validateForm = () => {
+            const addressSelected = document.querySelector('input[name="checkout[address_id]"]:checked');
+            const paymentSelected = document.querySelector('input[name="checkout[payment_method]"]:checked');
+      
+            if (!addressSelected) {
+              alert('Please select a shipping address');
+              return false;
+            }
+      
+            if (!paymentSelected) {
+              alert('Please select a payment method');
+              return false;
+            }
+      
+            const walletRadio = document.querySelector('input[name="checkout[payment_method]"][value="wallet"]');
+            const insufficientBalance = walletRadio && walletRadio.dataset.insufficientBalance === 'true';
+      
+            if (paymentSelected.value === 'wallet' && insufficientBalance) {
+              alert('Insufficient wallet balance. Please select another payment method.');
+              return false;
+            }
+      
+            return true;
+          };
+      
+          checkoutForm.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+              e.preventDefault();
+            }
+          });
+      
+          // Coupon Handling
+          document.getElementById('apply-coupon-btn').addEventListener('click', applyCoupon);
+      
+          function applyCoupon() {
+            const couponCode = document.querySelector('input[name="checkout[coupon_code]"]').value;
+      
+            fetch('/usermodule/checkouts/apply_coupon', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+              },
+              body: JSON.stringify({ coupon_code: couponCode })
+            })
+            .then(response => response.json())
+            .then(data => {
+              const discountRow = document.getElementById('discount-row');
+              const finalTotal = document.getElementById('final-total');
+              const couponFeedback = document.getElementById('coupon-feedback');
+              const feedbackText = couponFeedback.querySelector('p');
+      
+              if (data.success && data.discount > 0) {
+                discountRow.classList.remove('hidden');
+                discountRow.querySelector('span:last-child').textContent = `-${data.discount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}`;
+                finalTotal.textContent = data.total.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+                feedbackText.textContent = 'Coupon applied successfully';
+                couponFeedback.classList.remove('hidden');
+                couponFeedback.classList.add('text-green-600');
+                couponFeedback.classList.remove('text-red-600');
+              } else {
+                discountRow.classList.add('hidden');
+                finalTotal.textContent = data.total.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+                feedbackText.textContent = data.error || 'Invalid coupon';
+                couponFeedback.classList.remove('hidden');
+                couponFeedback.classList.add('text-red-600');
+                couponFeedback.classList.remove('text-green-600');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Error applying coupon');
+            });
           }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Error applying coupon');
         });
-      }
-    <% end %>
+      <% end %>      
+      
 </body>
 </html>

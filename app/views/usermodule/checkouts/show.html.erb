@@ -1,97 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 class="text-4xl font-bold mb-12 text-center text-gray-800">Order Confirmation</h1>
+<h1>Checkout Details</h1>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-semibold mb-6">Order Summary</h2>
-            <p><strong>Order ID:</strong> <%= @checkout.id %></p>
-            <p><strong>Order Date:</strong> <%= @checkout.created_at.strftime("%d-%m-%Y %H:%M") %></p>
-            <p><strong>Payment Status:</strong> <%= @checkout.payment_status.capitalize %></p>
-            <p><strong>Total Price:</strong> <%= number_to_currency(@checkout.total_price) %></p>
-        </div>
+<p>
+  <strong>Address:</strong>
+  <%= @checkout.address %>
+</p>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-semibold mb-6">Shipping Address</h2>
-            <% address = @checkout.address %>
-            <p><strong><%= address.first_name %> <%= address.last_name %></strong></p>
-            <p><%= address.building_name %>, <%= address.street_address %></p>
-            <p><%= address.city_name %>, <%= address.state_name %></p>
-            <p><%= address.phone %></p>
-        </div>
+<p>
+  <strong>Payment Method:</strong>
+  <%= @checkout.payment_method %>
+</p>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-semibold mb-6">Payment Method</h2>
-            <p><%= @checkout.payment_method == 'wallet' ? 'Wallet Payment' : 'Cash on Delivery' %></p>
-        </div>
+<p>
+  <strong>Total Price:</strong>
+  <%= @checkout.total_price %>
+</p>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-semibold mb-6">Order Items</h2>
-            <% @checkout.cart.cart_items.each do |cart_item| %>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-4">
-                        <% if cart_item.product.images.attached? %>
-                            <%= image_tag cart_item.product.images.first, class: "w-20 h-20 object-cover rounded-lg" %>
-                        <% end %>
-                        <div>
-                            <h3 class="font-medium text-lg"><%= cart_item.product.name %></h3>
-                            <p class="text-sm text-gray-500">
-                                Size: <%= cart_item.product_variant.size.size %>, Quantity: <%= cart_item.quantity %>
-                            </p>
-                            <p class="text-sm text-gray-500">
-                                Base Price: <%= number_to_currency(cart_item.product.base_price) %><br>
-                                Discount: <%= cart_item.product.discount_percentage %>%<br>
-                                Total Price: <%= number_to_currency(cart_item.product.base_price * (1 - cart_item.product.discount_percentage / 100.0) * cart_item.quantity) %>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            <% end %>
-        </div>
+<p>
+  <strong>Status:</strong>
+  <%= @checkout.status %>
+</p>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-semibold mb-6">Order Summary</h2>
-            <div class="space-y-3 border-t pt-4">
-                <div class="flex justify-between">
-                    <span>Subtotal</span>
-                    <span><%= number_to_currency(@checkout.total_price + @checkout.discount) %></span>
-                </div>
-                <div class="flex justify-between">
-                    <span>Tax</span>
-                    <span><%= number_to_currency(@checkout.tax) %></span>
-                </div>
-                <div class="flex justify-between">
-                    <span>Shipping</span>
-                    <span><%= number_to_currency(@checkout.shipping) %></span>
-                </div>
-                <div class="flex justify-between">
-                    <span>Discount</span>
-                    <span>-<%= number_to_currency(@checkout.discount) %></span>
-                </div>
-                <div class="flex justify-between font-bold text-lg">
-                    <span>Total</span>
-                    <span><%= number_to_currency(@checkout.total_price) %></span>
-                </div>
-            </div>
-        </div>
+<p>
+  <strong>Payment Status:</strong>
+  <%= @checkout.payment_status %>
+</p>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-semibold mb-6">Coupon Applied</h2>
-            <% if @checkout.discount > 0 %>
-                <p><strong>Coupon Code:</strong> <%= @checkout.coupon_code %></p>
-                <p><strong>Discount:</strong> -<%= number_to_currency(@checkout.discount) %></p>
-            <% else %>
-                <p>No coupon applied.</p>
-            <% end %>
-        </div>
 
-    </div>
-</body>
-</html>
+<%= link_to 'Edit', edit_usermodule_checkout_path(@checkout) %> |
+<%= link_to 'Back', usermodule_checkouts_path %>
